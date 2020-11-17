@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- style="--siteFont:PT Sans; --defaultTheme:dark; --codeFontFamily:Roboto Mono, Monaco, courier, monospace;
+  --bodyFontSize:15px; --accent:#42b983; --toogleBackground:#ffffff; --background:#091a28; --textColor:#b4b4b4;
+  --codeTextColor:#ffffff; --codeBackgroudColor:#0e2233; --borderColor:#0d2538; --blockQuoteColor:#858585;
+  --highlightColor:#d22778; --sidebarSublink:#b4b4b4; --codeTypeColor:#ffffff; --coverBackground:linear-gradient(to left
+  bottom, hsl(118, 100%, 85%) 0%,hsl(181, 100%, 85%) 100%);
+  --toogleImage:url(https\:\/\/cdn\.jsdelivr\.net\/npm\/docsify-darklight-theme\@latest\/icons\/sun\.svg);
+  --blockQuoteColour:#858585;" -->
+
+<head>
+  <meta charset=" UTF-8">
+  <title>Amazing Document</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="description" content="Description">
+  <meta name="viewport"
+    content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify/lib/themes/vue.css">
+  <link rel="icon" href="media/icon.svg">
+  <!-- <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify/themes/buble.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify/themes/dark.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify/themes/pure.css"> -->
+  <!-- <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify/themes/dolphin.css"> -->
+  <style>
+    /* 侧边栏一级标题 */
+    .sidebar-nav>ul>li>p {
+      font-size: 22px;
+      padding: 10px;
+    }
+
+    /* 侧边栏二级标题 */
+    .sidebar ul li p>a {
+      font-size: 16px;
+      padding-left: 40px;
+      font-weight: 600;
+    }
+
+    .sidebar ul li a {
+      font-size: 16px;
+      /* padding-left: 40px; */
+      font-weight: 600;
+    }
+
+    /* 侧边栏的文档标题 */
+    .sidebar .app-name a {
+      font-size: 30px;
+      font-weight: 700;
+      margin: 40px 0;
+    }
+
+    /* 最小级的标题 */
+    .app-sub-sidebar li>.section-link {
+      font-size: 14px;
+    }
+
+    .app-sub-sidebar>li {
+      margin-left: 40PX;
+    }
+
+    /* .ready section.cover {
+      padding-left: 100px;
+    } */
+
+    h6 a {
+      text-decoration: none;
+    }
+
+    /* 设置代码的样式 */
+    .markdown-section pre>code {
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 30px;
+      /* height: 20px; */
+    }
+  </style>
+</head>
+
+<body>
+  <!-- <nav>
+    <a href="#/">EN</a>
+    <a href="#/zh-cn/">中文</a>
+  </nav> -->
+  <!-- <div id="app">Please Wait...</div> -->
+  <div id="app"><img src="https://wimg.588ku.com/gif620/19/09/07/b99d2cd06a8e4a9e961c0ee89a0b41e1.gif" width="200"
+      height="200" alt=""></div>
+
+  <!-- 引入配置文件 -->
+  <script src="./config.js"></script>
+  <!-- 引入vue -->
+  <script src="//cdn.jsdelivr.net/npm/vue/dist/vue.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify/lib/docsify.min.js"></script>
+  <!-- 提供字数统计  -->
+  <script src="//unpkg.com/docsify-count/dist/countable.js"></script>
+  <!-- 开启全局搜索 -->
+  <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
+  <!-- 可以复代码 -->
+  <script src="//cdn.jsdelivr.net/npm/docsify-copy-code"></script>
+  <!-- 离线模式配置 -->
+  <script>
+    if (typeof navigator.serviceWorker !== 'undefined') {
+      navigator.serviceWorker.register('sw.js')
+    }
+  </script>
+  <!-- 引入自己写入的一些操作 -->
+  <script src='./index.js'></script>
+
+</body>
+
+</html>

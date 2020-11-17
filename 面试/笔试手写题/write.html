@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    // 定义一个大容器对象,用来存储对应发布者的方法
+    let subscribeContainer = {}
+    // 定义一个PubSub对象
+    const PubSub = {}
+    // 定义一个标识,用来作为后面取消对应发布的唯一标识
+    let flag = 0
+    // 定义对应的订阅消息的方法
+    PubSub.subscribe = function (msg, fn) {
+      // 获取到大容器对象中的订阅者对象
+      let subscribes = subscribeContainer[msg]
+      // 判断是不是第一次订阅
+      if (!subscribes) {
+        // 第一次订阅,则让这个订阅者对象为一个空对象
+        // subscribeContainer[msg] = {}
+        subscribes = subscribeContainer[msg] = {}
+      }
+      // 定义一个标识
+      let id = '_id' + flag++
+      // 给这个订阅者对象添加一个属性
+      subscribes[id] = fn
+      // 将当前次订阅的的唯一标识返回
+      return id;
+    }
+
+    //同步发布消息
+    PubSub.publishSync = function (msg, data) {
+      // 判断大容器对象中是否有对应的订阅者
+      let subscribes = subscribeContainer[msg]
+      // 如果有,遍历对应的订阅者对象,调用其中的每一个方法
+      if (subscribes) {
+        Object.keys(subscribes).forEach(item => subscribes[item](data))
+      }
+    }
+    // PubSub.publishSync('test2', 1)
+
+    // 异步发布消息
+    PubSub.publish = function (msg, data) {
+      // 判断大容器对象中是否有对应的订阅者
+      let subscribes = subscribeContainer[msg]
+      // 如果有,遍历对应的订阅者对象,调用其中的每一个方法
+      setTimeout(() => {
+        if (subscribes) {
+          Object.keys(subscribes).forEach(item => subscribes[item](data))
+        }
+      }, 1000)
+    }
+
+    // 取消订阅,  使用唯一标识取消唯一的一个订阅,不传递参数取消所有,传递对应的消息名取消对应的消息名对应的所有订阅
+    PubSub.unsubcribe = function (msg) {
+      // 判断是否有传递参数
+      if (msg) {
+        // 判断传递的参数是标识还是消息名
+        if (msg.indexOf('_id') === 0) {
+          // 
+          Object.keys(subscribeContainer).forEach(subscribes => {
+            delete subscribeContainer[subscribes][msg]
+            // Object.keys(subscribeContainer[subscribes]).forEach(subscribe => {
+            //   delete subscribes
+            //   subscribes[subscribe] === msg
+            // })
+          })
+        } else if (subscribeContainer[msg]) {
+          delete subscribeContainer[msg]
+        }
+      } else {
+        // 如果没有传递参数,则取消所有消息名的所有订阅
+        subscribeContainer = {}
+      }
+    }
+    const token = PubSub.subscribe('test1', function (data) {
+      console.log('test1', data)
+    })
+    PubSub.subscribe('test1', function (data) {
+      console.log('test1-', data)
+    })
+    PubSub.subscribe('test2', function (data) {
+      console.log('test2', data)
+    })
+    PubSub.publish('test1', 3)//
+    PubSub.unsubcribe('test1')
+    PubSub.unsubcribe(token)
+    PubSub.unsubcribe()
+    PubSub.publishSync('test1', 1)
+    PubSub.publishSync('test1', 2)
+    PubSub.unsubcribe('test1')
+  </script>
+</body>
+
+</html>
