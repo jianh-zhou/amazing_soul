@@ -1,5 +1,5 @@
 <!-- ![logo](/media/icon.svg) -->
-<img src="/media/small.gif" width="200px" height="200px">
+<img src="https://wimg.588ku.com/gif620/20/04/05/5101fd2fee45aad8a62127e04778c06a.gif" width="200px" height="200px">
 
 # Amazing document <small>1.0</small>
 
@@ -13,6 +13,8 @@
 [Get Started](#docsify)
 
 <!-- 背景图片 -->
-<!-- ![](_media/bg.png) -->
+
+
 <!-- 背景色 -->
-<!-- ![color](#f0f0f0) -->
+
+![color](#f0f0f0)

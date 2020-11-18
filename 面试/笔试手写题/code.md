@@ -101,6 +101,7 @@ console.log(new Person('哈哈', 20)) //{name: "哈哈", age: 20}
 function myInstanceOF(obj, Fn) {
   // 定义一个方法判断传入的参数的类型
   function testType(obj) {
+    // 将传入的参数,调用对象的toString方法,将返回的值进行截取,
     return Object.prototype.toString.call(obj).slice(8).replace(']', '')
   }
   // 判断传入的第二个参数是否为函数,如果不是函数则抛出错误,然后也不会执行后面的代码
@@ -388,8 +389,40 @@ test2.onclick = throttle(fn1, 1000, 3, 4, 5, 6)
 
 封装一个函数,函数年内部遍历数据,判断其中的每一个数据是否是引用类型数据,如果是则递归调用封装的函数,直到没有引用类型数据
 
-
-
+```js
+// 定义一个方法实现深度克隆
+function deelClone(data) {
+  // 定义方法判断数据的类型
+  function testType(obj) {
+    // 将传入的参数,调用对象的toString方法,将返回的值进行截取,
+    return Object.prototype.toString.call(obj).slice(8).replace(']', '')
+  }
+  // 定义一个变量
+  let newObj = null
+  // 判断传入参数的类型,给初始变量赋值一个初始值
+  testType(data) === 'Object' ? (newObj = {}) : (newObj = [])
+  /*  
+      1 不管是数组还是对象,调用 Object.keys()方法获取所有key值的集合(数组)
+      2 调用reduce方法,第二个参数传入定义的初始值(对象或者数组)
+      3 通过key值获取到对应的键值,判断是否是引用类型
+      4 如果当前的键值为引用类型,再次调用深度克隆的方法,并且将该键值作为参数传入,并且将该函数的返回值添加到当前的pre上
+      5 如果当前的键值为非引用类型,则直接将键值添加给pre上
+  */
+  return Object.keys(data).reduce((pre, item) => {
+    typeof data[item] === 'object'
+      ? (pre[item] = deelClone(data[item]))
+      : (pre[item] = data[item])
+    return pre
+  }, newObj)
+}
+const obj = {
+  name: '小周',
+  alias: 'amazing_horse',
+  hobby: ['篮球', '游戏'],
+  friend: { name: '科比' },
+}
+console.log(deelClone(obj).hobby === obj.hobby) //false
+```
 
 ## 手写实现自定义事件
 
