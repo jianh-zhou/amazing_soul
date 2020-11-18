@@ -60,7 +60,7 @@ Redux 或者 Pubsub 来实现一个任意组件通信的效果
 
 ### 旧版生命周期
 
-<img src="../media/react老版生命周期.png" />
+<img src="https://i.loli.net/2020/11/18/MhSVuJkdrsTzA4y.png" />
 
 #### 在初始化阶段中，执行顺序：
 
@@ -92,7 +92,7 @@ Redux 或者 Pubsub 来实现一个任意组件通信的效果
 
 ### 新版生命周期
 
-<img src="../media/react新版生命周期.png" />
+<img src="https://i.loli.net/2020/11/18/w7LFKyfYSXQEZml.png" />
 
 ### 在初始化阶段中，执行顺序：
 

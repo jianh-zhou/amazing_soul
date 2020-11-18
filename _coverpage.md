@@ -1,5 +1,5 @@
 <!-- ![logo](/media/icon.svg) -->
-<img src="/media/icon.svg" width="200px" height="200px">
+<img src="/media/small.gif" width="200px" height="200px">
 
 # Amazing document <small>1.0</small>
 
@@ -9,7 +9,7 @@
 - 最强笔记
 - 仅供参考借鉴,请勿转发
 
-[GitHub](https://github.com/docsifyjs/docsify/)
+[GitHub](https://github.com/jianh-zhou/amazing_soul.git)
 [Get Started](#docsify)
 
 <!-- 背景图片 -->
