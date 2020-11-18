@@ -315,11 +315,40 @@ PubSub.unsubcribe('test1')
 
 ## 8 简单实现函数的防抖节流
 
+```js
+// 防抖节流测试的按钮(小知识:谷歌浏览器中可以直接使用id,获取对应的元素)
+<button id="test1">防抖</button>
+<button id="test2">节流</button>
+```
+
 #### 防抖
 
-###### 原理
+##### 原理
 
 阻止用户多次连续点击,不管怎么点击,最终只会执行一次.一般应用在获取验证码的界面
+
+```js
+// 实现防抖,使用闭包的形式,返回一个函数
+function debounce(callback, time, ...args) {
+  // 需要定义正常函数,如果使用箭头函数,this会执行window,不会执行对应触发回调的对象
+  return function () {
+    // 触发该函数,就清除对应的定时器,就取消上一次的对应的函数触发,直到不再点击,最终只会执行一次
+    clearTimeout(this.timer)
+    this.timer = setTimeout(() => {
+      // 清除上一个定时器的句柄,因为进入到这里就说明是最后触发的那一次
+      this.timer = ''
+      // 调用传递进来的回调,并且改变this,且传递参数
+      callback.call(this, ...args)
+    }, time)
+  }
+}
+// 传递参数
+let fn = function (a, b, c) {
+  console.log('我是防抖测试', a, b, c)
+  console.log(this)
+}
+test1.onclick = debounce(fn, 1000, 1, 23, 2)
+```
 
 #### 节流
 
@@ -327,6 +356,45 @@ PubSub.unsubcribe('test1')
 
 在单位时间内触发一次,不会频繁触发,用在频繁的触发事件中,提高性能
 
+```js
+//函数节流
+function throttle(...args) {
+  return function () {
+    // 通过解构获取到传递的所有参数
+    const [callback, time, ...datas] = args
+    // 获取上一次点击的时间戳与当前时间戳的差值是否大于传入的节流时间,并且第一次会直接执行一次
+    if (Date.now() - this.time > time || !this.time) {
+      // 保存当前的时间戳,下一次调用时进行判断
+      this.time = Date.now()
+      // 传递参数,并且调用
+      callback.call(this, ...datas)
+    }
+  }
+}
+let fn1 = function (a, b, c) {
+  console.log('我是节流测试', a, b, c)
+  console.log(this)
+}
+test2.onclick = throttle(fn1, 1000, 3, 4, 5, 6)
+```
+
+## 9 实现深度克隆
+
+- 1 克隆分为深度克隆和浅克隆,
+  - 深度克隆是将对应数据的所有数据复制一份,内容相同,但是地址值不相同
+  - 浅克隆就是最外一层的数据,如果该数据中还有引用类型的数据,则只会赋值地址
+
+##### 实现原理
+
+封装一个函数,函数年内部遍历数据,判断其中的每一个数据是否是引用类型数据,如果是则递归调用封装的函数,直到没有引用类型数据
+
+
+
+
 ## 手写实现自定义事件
 
 ## 手写 pormise
+
+```
+
+```
