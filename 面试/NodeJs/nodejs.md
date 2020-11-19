@@ -5,7 +5,6 @@
 &emsp;&emsp;Promise 是异步编程的解决方案，用来解决我们日常开发中常见的回调地狱问题。
 
 &emsp;&emsp;Promise 对象有三种状态，分别是 pending、resolved/fulfilled、rejected，pending 状态代表初始化或者进行中，resolved 代表成功，rejected 代表失败。Promise 对象 的状态只能被更改一次。Promise 对象的实例有很多方法，比如 then、catch、finally。 then 方法接受两个回调函数，成功调用第一个，失败调用第二个。then 方法返回的也 是一个 Promise 实例，返回的状态有几种可能:
-<font size=4>
 
 - 1. 如果没有返回值或者返回的不是一个 promise，就是成功
 - 2. 如果返回的是一个失败的 promise 或者抛错，就是失败
@@ -73,12 +72,15 @@ finally 是无论成功还是失败都会调用这个函数
 - 3. 回调队列
   - 事件队列、任务队列、消息队列
 - 4. 事件轮询
+
   - 内部不停询问元素有没有被触发事件
+
+    <img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gh5zsm0f2cj310p0u076v.jpg" width="800" height="500" max-width="100%"/>
 
 #### Node 事件轮询：
 
 - 1. timers
-  - 会执行 settingout 和 setInterval
+  - 会执行 setTimeout 和 setInterval
 - 2. I/O callbacks
   - 会执行 close 的 事件, setImmediate
 - 3. Idle,prepare
