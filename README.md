@@ -10,3 +10,13 @@
 <!-- ![alt text](./media/02d760e4f246d75f853c608376d9afa8.gif) -->
 
 <img src="https://wimg.588ku.com/gif620/20/07/30/6be15f726a6971f98933bfdb2f32c8fd.gif" width="500" height="500" max-width="100%"/>
+<br>
+
+<span id="busuanzi_container_site_pv" style='display:none'>
+    👀 本站总访问量：<span id="busuanzi_value_site_pv"></span> 次
+</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+    | 🚴‍♂️ 本站总访客数：<span id="busuanzi_value_site_uv"></span> 人
+</span>
+
+<br>
