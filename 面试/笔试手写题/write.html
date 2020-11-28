@@ -9,7 +9,109 @@
 
 <body>
   <script>
+    // 定义三个promise的状态的变量
+    const _RESOLVED = "resolved"
+    const _REJECTED = "rejected"
+    const _PENDING = 'pending'
+    //使用类书写Promise
+    class Promise {
+      // 构造器
+      constructor(excutor) {
+        // 定义promise的初始状态
+        this.state = _PENDING
+        this.value = ''
+        this.allRejects = []
+        this.allResolves = []
+        const that = this
+        //改变promise状态为成功状态的方法
+        function resolve(value) {
+          // 状态只改变一次,只有状态时pending状态时,才能改变状态
+          if (that.state !== _PENDING) return
+          that.state = _RESOLVED
+          that.value = value
+          //将promise状态为pending状态时,then方法的回调函数进行调用
+          if (!that.allResolves.length) return
+          that.allResolves.forEach(item => item.call(that))
+        }
 
+        //改变promise状态为失败状态的方法
+        function reject(value) {
+          // 状态只改变一次,只有状态时pending状态时,才能改变状态
+          if (that.state !== _PENDING) return
+          that.state = _REJECTED
+          that.value = value
+          //将promise状态为pending状态时,then方法的回调函数进行调用
+          if (!that.allRejects.length) return
+          that.allRejects.forEach(item => item.call(that))
+        }
+
+        try {
+          // 调用传递进来的构造器函数
+          excutor(resolve, reject)
+        } catch (err) {
+          reject(err)
+        }
+
+      }
+      then = function (onresolved, onrejected) {
+        return new Promise((resolve, reject) => {
+          // 判断then方法传入的回调函数,是否有值
+          if (onresolved) {
+            onresolved = () => {
+
+            }
+          }
+          if (onrejected) {
+            onrejected = () => {
+              throw new Error('没有传递第二个回调函数')
+            }
+          }
+          // 判断调用这个函数的状态,
+          if (this.state === '_RESOLVED') {
+            callback(onresolved)
+          } else if (this.state === '_REJECTED') {
+            callback(onrejected)
+          } else {
+            this.allResolves.push(callback(onresolved))
+            this.allRejects.push(callback(onrejected))
+          }
+          const that = this
+          // 定义一个方法,用来在成功或者失败执行的函数
+          function callback(cb) {
+            setTimeout(() => {
+              try {
+                // 判断当前方法的返回值
+                const result = cb(that.value)
+                // 判断返回值是否是一个promise
+                if (result instanceof Promise) {
+                  result.then(resolve, reject)
+                } else {
+                  resolve(result)
+                }
+              } catch (err) {
+                console.log(that.value)
+                reject(err)
+              }
+            })
+          }
+        })
+      }
+
+    }
+
+    const promise = new Promise((resolve, reject) => {
+      reject('这是失败的')
+      // throw new Error('我是测试失败的promise')
+    })
+    console.log(promise)
+    const promise1 = new Promise((resolve, reject) => {
+      resolve('不知道行不行')
+    }).then((value) => {
+      throw new Error('haha')
+      return value
+    }, () => { })
+
+    console.log(promise1)
   </script>
 </body>
 
