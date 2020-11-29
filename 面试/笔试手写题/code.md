@@ -428,6 +428,125 @@ console.log(deelClone(obj).hobby === obj.hobby) //false
 
 ## 手写 pormise
 
-```
+```js
+// 定义三个promise的状态的变量
+const _RESOLVED = 'resolved'
+const _REJECTED = 'rejected'
+const _PENDING = 'pending'
+//使用类书写Promise
+class Promise {
+  // 构造器
+  constructor(excutor) {
+    // 定义promise的初始状态
+    this.state = _PENDING
+    this.value = ''
+    this.allRejects = []
+    this.allResolves = []
+    // 将当前的this保存起来
+    const that = this
+    //改变promise状态为成功状态的方法
+    function resolve(value) {
+      // 状态只改变一次,只有状态时pending状态时,才能改变状态
+      if (that.state !== _PENDING) return
+      that.state = _RESOLVED
+      that.value = value
+      //将promise状态为pending状态时,then方法的回调函数进行调用
+      if (!that.allResolves.length) return
+      that.allResolves.forEach((item) => item.call(that))
+    }
 
+    //改变promise状态为失败状态的方法
+    function reject(value) {
+      // 状态只改变一次,只有状态时pending状态时,才能改变状态
+      if (that.state !== _PENDING) return
+      that.state = _REJECTED
+      that.value = value
+      //将promise状态为pending状态时,then方法的回调函数进行调用
+      if (!that.allRejects.length) return
+      that.allRejects.forEach((item) => item.call(that))
+    }
+    try {
+      // 调用传递进来的构造器函数,并且把定义的方法,作为参数传递进去
+      excutor(resolve, reject)
+    } catch (err) {
+      // 如果抛错,则直接返回失败的promise
+      reject(err)
+    }
+  }
+
+  then(onresolved, onrejected) {
+    return new Promise((resolve, reject) => {
+      // 判断then方法传入的回调函数,是否有值
+      if (!onresolved) {
+        onresolved = () => {}
+      }
+      if (!onrejected) {
+        onrejected = () => {
+          throw new Error('没有传递第二个回调函数')
+        }
+      }
+      // 判断调用这个函数的状态,
+      if (this.state === _RESOLVED) {
+        callback(onresolved)
+      } else if (this.state === _REJECTED) {
+        callback(onrejected)
+      } else {
+        this.allResolves.push(callback.bind(this, onresolved))
+        this.allRejects.push(callback.bind(this, onrejected))
+      }
+      const that = this
+      // 定义一个方法,用来在成功或者失败执行的函数
+      function callback(cb) {
+        // 使用定时器,模拟then方法的异步调用,但是实际上then方法是微任务,是比定时器优先级高的
+        setTimeout(() => {
+          try {
+            // 判断当前方法的返回值
+            const result = cb(that.value)
+            // 判断返回值是否是一个promise
+            if (result instanceof Promise) {
+              // 如果返回的是一个promise对象,则递归调用then方法,此次then方法传递的两个回调函数是当前的resolve方法和reject方法,最终对应的函数调用对应的方法,从而确定当前then方法的状态
+              result.then(resolve, reject)
+            } else {
+              // 默认返回一个成功的promise对象
+              resolve(result)
+            }
+          } catch (err) {
+            // 如果抛错则返回一个失败的promise对象
+            reject(err)
+          }
+        }, 0)
+      }
+    })
+  }
+}
+
+const promise1 = new Promise((resolve, reject) => {
+  setTimeout(() => {
+    reject('不知道行不行')
+  }, 1000)
+})
+  .then(
+    (value) => {
+      throw new Error('haha')
+      // return value
+    },
+    () => {
+      return new Promise((resolve, reject) => {
+        // console.log(11)
+        reject()
+      })
+    }
+  )
+  .then(
+    () => {
+      return new Promise((resolve, reject) => {
+        // console.log(11)
+        reject()
+      })
+    },
+    () => {
+      return '我就测试一下'
+    }
+  )
+console.log(promise1)
 ```
