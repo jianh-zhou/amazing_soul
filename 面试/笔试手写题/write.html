@@ -8,120 +8,135 @@
 </head>
 
 <body>
+  <button id="send">发送请求</button>
+  <button id="cancel">取消请求</button>
   <script>
-    // 定义三个promise的状态的变量
-    const _RESOLVED = "resolved"
-    const _REJECTED = "rejected"
-    const _PENDING = 'pending'
-    //使用类书写Promise
-    class Promise {
-      // 构造器
-      constructor(excutor) {
-        // 定义promise的初始状态
-        this.state = _PENDING
-        this.value = ''
-        this.allRejects = []
-        this.allResolves = []
-        // 将当前的this保存起来
-        const that = this
-        //改变promise状态为成功状态的方法
-        function resolve(value) {
-          // 状态只改变一次,只有状态时pending状态时,才能改变状态
-          if (that.state !== _PENDING) return
-          that.state = _RESOLVED
-          that.value = value
-          //将promise状态为pending状态时,then方法的回调函数进行调用
-          if (!that.allResolves.length) return
-          that.allResolves.forEach(item => item.call(that))
-        }
+    // function Axios(){
+    //   this
+    // }
+    // 定义一个拦截器构造函数
+    function InterceptorsMannger() {
+      //给对应的实例对象添加一个属性(数组),该数组用来存放请求拦截和响应拦截的回调函数
+      this.handlers = []
+    }
+    // 给你拦截器构造函数添加一use方法,该方法内部,给对应的拦截器对象的事件数组添加对应的回调函数
+    InterceptorsMannger.prototype.use = function (fulfilled, rejected) {
+      this.handlers.push({
+        fulfilled,
+        rejected
+      })
+    }
 
-        //改变promise状态为失败状态的方法
-        function reject(value) {
-          // 状态只改变一次,只有状态时pending状态时,才能改变状态
-          if (that.state !== _PENDING) return
-          that.state = _REJECTED
-          that.value = value
-          //将promise状态为pending状态时,then方法的回调函数进行调用
-          if (!that.allRejects.length) return
-          that.allRejects.forEach(item => item.call(that))
-        }
-        try {
-          // 调用传递进来的构造器函数,并且把定义的方法,作为参数传递进去
-          excutor(resolve, reject)
-        } catch (err) {
-          // 如果抛错,则直接返回失败的promise
-          reject(err)
-        }
-
-      }
-
-      then(onresolved, onrejected) {
-        return new Promise((resolve, reject) => {
-          // 判断then方法传入的回调函数,是否有值
-          if (!onresolved) {
-            onresolved = () => { }
-          }
-          if (!onrejected) {
-            onrejected = () => {
-              throw new Error('没有传递第二个回调函数')
-            }
-          }
-          // 判断调用这个函数的状态,
-          if (this.state === _RESOLVED) {
-            callback(onresolved)
-          } else if (this.state === _REJECTED) {
-            callback(onrejected)
-          } else {
-            this.allResolves.push(callback.bind(this, onresolved))
-            this.allRejects.push(callback.bind(this, onrejected))
-          }
-          const that = this
-          // 定义一个方法,用来在成功或者失败执行的函数
-          function callback(cb) {
-            // 使用定时器,模拟then方法的异步调用,但是实际上then方法是微任务,是比定时器优先级高的
-            setTimeout(() => {
-              try {
-                // 判断当前方法的返回值
-                const result = cb(that.value)
-                // 判断返回值是否是一个promise
-                if (result instanceof Promise) {
-                  // 如果返回的是一个promise对象,则递归调用then方法,此次then方法传递的两个回调函数是当前的resolve方法和reject方法,最终对应的函数调用对应的方法,从而确定当前then方法的状态
-                  result.then(resolve, reject)
-                } else {
-                  // 默认返回一个成功的promise对象
-                  resolve(result)
-                }
-              } catch (err) {
-                // 如果抛错则返回一个失败的promise对象
-                reject(err)
-              }
-            }, 0)
-          }
-        })
+    //定义Axios构造函数
+    function Axios(instanceCOnfig) {
+      // 将
+      this.defaults = instanceCOnfig
+      this.interceptors = {
+        request: new InterceptorsMannger(),//请求拦截器对象
+        response: new InterceptorsMannger()//响应拦截器对象
       }
     }
 
-    const promise1 = new Promise((resolve, reject) => {
-      setTimeout(() => {
-        reject('不知道行不行')
-      }, 1000)
-    }).then((value) => {
-      throw new Error('haha')
-      // return value
-    }, () => {
-      return new Promise((resolve, reject) => {
-        // console.log(11)
-        reject()
+    // 给Axios的原型对象添加一个request方法
+    Axios.prototype.request = function (config) {
+      function dispatchRequest() {
+        // 获取到请求方式,并且配置默认的请求方式
+        const method = (config.method || 'get').toUpperCase()
+        return new Promise((resolve, reject) => {
+          const xhr = new XMLHttpRequest()
+          // 定义一个onreadystatechange事件
+          xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+              // 判断是否请求成功
+              if (xhr.status < 300 && xhr.status >= 200) {
+                // 得到相应体的内容
+                const data = JSON.parse(xhr.responseText)
+                //得到相应头
+                const headers = xhr.getAllResponseHeaders()
+                const request = xhr
+                //状态码
+                const status = xhr.status
+                // 状态码的说明
+                const statusText = xhr.statusText
+                resolve({
+                  config,
+                  data,
+                  headers,
+                  request,
+                  status,
+                  statusText
+                })
+              } else {
+                reject('请求失败,')
+              }
+            }
+
+          }
+          // 判断请求的参数形式,如果是params则进行截取
+          if (typeof config.params === 'object') {
+            config.url += '?' + Object.keys(config.params).map(item => item + '=' + config.params[item]).join('&')
+          }
+          xhr.open(method, config.url)
+          // 判断请求的方式,从而决定是否要设置对应的请求头
+          if (xhr.method === 'POST' || xhr.method === 'PUT' || xhr.method === 'PATCH') {
+            // 并且判断传入的data参数是否是对象
+            if (config.data === 'object') {
+              xhr.setRequestHeader('content-type', 'application/json')
+            } else if (config.data === 'string') {
+              //如果不是对象
+              xhr.setRequestHeader('content-type', 'applicaion/x-www-form-urlencoded')
+            }
+            xhr.send(JSON.stringify(config.data))
+          } else {
+            xhr.send()
+          }
+          // 定义一个变量用来保存,发送请求的对应数组的初始数据
+        })
+      }
+
+      let chain = [dispatchRequest, null]
+      // 将请求拦截器的所有回调函数插入到chain数组中
+      this.interceptors.request.handlers.forEach(interceptor => {
+        chain.unshift(interceptor.fulfilled, interceptor.rejected)
       })
-    }).then(() => {
-      return new Promise((resolve, reject) => {
-        // console.log(11)
-        reject()
+      // 将响应拦截器的所有回调函数插入到chain数组中
+      this.interceptors.response.handlers.forEach(interceptor => {
+        chain.push(interceptor.fulfilled, interceptor.rejected)
       })
-    }, () => {
-      return '我就测试一下'
+
+      // 定义一个promise
+      let promise = Promise.resolve(config)
+      while (chain.length) {
+        // 通过将之前的回调函数作为then方法的两个回调函数参数,进行链式调用,每次调用一次then方法,数组长度减2,通过while语句,最终结束循环
+        promise = promise.then(chain.shift(), chain.shift())
+      }
+    }
+
+    // axios本质上不是一个Axios构造函数的实例,而是一个函数对象,函数时request
+    function createInstance(defaultConfig) {
+      const context = new Axios(defaultConfig)
+      // 得到一个instance函数,并且该函数的this指向对应的Axios函数的实例对象
+      let instance = Axios.prototype.request.bind(context)
+      //将Axios函数上的所有方法都放入对应的的instance函数上
+      Object.keys(Axios.prototype).forEach(method => {
+        instance[method] = Axios.prototype[method].bind(context)
+      })
+      // 将Axios函数上的所有属性添加到instance函数上
+      Object.keys(context).forEach(attr => {
+        instance[attr] = context[attr]
+      })
+      return instance
+    }
+    //生成一个axios
+    const axios = createInstance({})
+    // 请求拦截测试
+    axios.interceptors.request.use((config) => {
+
+    }, () => { })
+    // 发送请求
+    axios({
+      url: 'http://127.0.0.1:8080/one',
     })
-    console.log(promise1)
   </script>
 </body>
 
