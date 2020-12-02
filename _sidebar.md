@@ -138,7 +138,7 @@
 
   - [7 json.server 以及 axios 基础](个人笔记/Promise/json.server以及axios基础.md)
 
-  - [8 webpack 配置教程](个人笔记/ES5和ES6/webpack配置教程.md)
+  - [8 webpack 配置教程](个人笔记/Promise/webpack配置教程.md)
 
 - 🐮Vue 框架
 
