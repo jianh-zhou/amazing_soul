@@ -5,139 +5,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <style>
+    .box1 {
+      width: 100px;
+      height: 100px;
+      border: 1px solid #000;
+    }
+  </style>
 </head>
 
 <body>
-  <button id="send">发送请求</button>
-  <button id="cancel">取消请求</button>
-  <script>
-    // function Axios(){
-    //   this
-    // }
-    // 定义一个拦截器构造函数
-    function InterceptorsMannger() {
-      //给对应的实例对象添加一个属性(数组),该数组用来存放请求拦截和响应拦截的回调函数
-      this.handlers = []
-    }
-    // 给你拦截器构造函数添加一use方法,该方法内部,给对应的拦截器对象的事件数组添加对应的回调函数
-    InterceptorsMannger.prototype.use = function (fulfilled, rejected) {
-      this.handlers.push({
-        fulfilled,
-        rejected
-      })
-    }
+  <div contentEditable="true" class="box1">
 
-    //定义Axios构造函数
-    function Axios(instanceCOnfig) {
-      // 将
-      this.defaults = instanceCOnfig
-      this.interceptors = {
-        request: new InterceptorsMannger(),//请求拦截器对象
-        response: new InterceptorsMannger()//响应拦截器对象
-      }
-    }
-
-    // 给Axios的原型对象添加一个request方法
-    Axios.prototype.request = function (config) {
-      function dispatchRequest() {
-        // 获取到请求方式,并且配置默认的请求方式
-        const method = (config.method || 'get').toUpperCase()
-        return new Promise((resolve, reject) => {
-          const xhr = new XMLHttpRequest()
-          // 定义一个onreadystatechange事件
-          xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4) {
-              // 判断是否请求成功
-              if (xhr.status < 300 && xhr.status >= 200) {
-                // 得到相应体的内容
-                const data = JSON.parse(xhr.responseText)
-                //得到相应头
-                const headers = xhr.getAllResponseHeaders()
-                const request = xhr
-                //状态码
-                const status = xhr.status
-                // 状态码的说明
-                const statusText = xhr.statusText
-                resolve({
-                  config,
-                  data,
-                  headers,
-                  request,
-                  status,
-                  statusText
-                })
-              } else {
-                reject('请求失败,')
-              }
-            }
-
-          }
-          // 判断请求的参数形式,如果是params则进行截取
-          if (typeof config.params === 'object') {
-            config.url += '?' + Object.keys(config.params).map(item => item + '=' + config.params[item]).join('&')
-          }
-          xhr.open(method, config.url)
-          // 判断请求的方式,从而决定是否要设置对应的请求头
-          if (xhr.method === 'POST' || xhr.method === 'PUT' || xhr.method === 'PATCH') {
-            // 并且判断传入的data参数是否是对象
-            if (config.data === 'object') {
-              xhr.setRequestHeader('content-type', 'application/json')
-            } else if (config.data === 'string') {
-              //如果不是对象
-              xhr.setRequestHeader('content-type', 'applicaion/x-www-form-urlencoded')
-            }
-            xhr.send(JSON.stringify(config.data))
-          } else {
-            xhr.send()
-          }
-          // 定义一个变量用来保存,发送请求的对应数组的初始数据
-        })
-      }
-
-      let chain = [dispatchRequest, null]
-      // 将请求拦截器的所有回调函数插入到chain数组中
-      this.interceptors.request.handlers.forEach(interceptor => {
-        chain.unshift(interceptor.fulfilled, interceptor.rejected)
-      })
-      // 将响应拦截器的所有回调函数插入到chain数组中
-      this.interceptors.response.handlers.forEach(interceptor => {
-        chain.push(interceptor.fulfilled, interceptor.rejected)
-      })
-
-      // 定义一个promise
-      let promise = Promise.resolve(config)
-      while (chain.length) {
-        // 通过将之前的回调函数作为then方法的两个回调函数参数,进行链式调用,每次调用一次then方法,数组长度减2,通过while语句,最终结束循环
-        promise = promise.then(chain.shift(), chain.shift())
-      }
-    }
-
-    // axios本质上不是一个Axios构造函数的实例,而是一个函数对象,函数时request
-    function createInstance(defaultConfig) {
-      const context = new Axios(defaultConfig)
-      // 得到一个instance函数,并且该函数的this指向对应的Axios函数的实例对象
-      let instance = Axios.prototype.request.bind(context)
-      //将Axios函数上的所有方法都放入对应的的instance函数上
-      Object.keys(Axios.prototype).forEach(method => {
-        instance[method] = Axios.prototype[method].bind(context)
-      })
-      // 将Axios函数上的所有属性添加到instance函数上
-      Object.keys(context).forEach(attr => {
-        instance[attr] = context[attr]
-      })
-      return instance
-    }
-    //生成一个axios
-    const axios = createInstance({})
-    // 请求拦截测试
-    axios.interceptors.request.use((config) => {
-
-    }, () => { })
-    // 发送请求
-    axios({
-      url: 'http://127.0.0.1:8080/one',
-    })
-  </script>
+  </div>
 </body>
 
 </html>
