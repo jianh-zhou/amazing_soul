@@ -18,21 +18,24 @@
   <style>
     /* 侧边栏一级标题 */
     .sidebar-nav>ul>li>p {
-      font-size: 18px;
+      font-size: 16px;
       padding: 10px;
     }
 
     /* 侧边栏二级标题 */
     .sidebar ul li p>a {
-      font-size: 16px;
-      padding-left: 40px;
-      font-weight: 600;
+      font-size: 14px;
+      padding-left: 60px;
+      font-weight: 400;
     }
 
     .sidebar ul li a {
       font-size: 16px;
-      /* padding-left: 40px; */
-      font-weight: 600;
+      font-weight: 400;
+    }
+    /* 调整二级菜单 */
+    .sidebar .sidebar-nav>ul ul {
+      margin-left: 25px;
     }
 
     /* 侧边栏的文档标题 */
@@ -45,15 +48,24 @@
     /* 最小级的标题 */
     .app-sub-sidebar li>.section-link {
       font-size: 14px;
+      margin-left: 10px;
     }
 
     .app-sub-sidebar>li {
-      margin-left: 40PX;
+      /* margin-left: 40PX; */
     }
 
-    /* .ready section.cover {
+    .sidebar li.collapse .app-sub-sidebar {
+      display: none;
+    }
+
+    .sidebar p.collapse .app-sub-sidebar {
+      display: none;
+    }
+
+    .ready section.cover {
       padding-left: 100px;
-    } */
+    }
 
     h6,
     h5 a {
@@ -65,7 +77,6 @@
       font-size: 14px;
       font-weight: 700;
       line-height: 30px;
-      /* height: 20px; */
     }
   </style>
 </head>
