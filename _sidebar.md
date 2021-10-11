@@ -38,6 +38,10 @@
 
     - [webpack 介绍](学习/webpack/webpack介绍.md)
 
+  - JS 基础
+
+    - [垃圾回收](学习/JS基础/垃圾回收.md)
+
 - 个人真实面试题
 
   - First
@@ -152,10 +156,9 @@
   - [2 React 第二天](个人笔记/React/2React第二天.md)
   - [3 React 第三天](个人笔记/React/3React第三天.md)
   - [4 React 第四天](个人笔记/React/4React第四天.md)
-  - [5 React 第 5 天(Router)](<个人笔记/React/5React第5天(Router).md>)
-  - [6 react 第六天(redux)](<个人笔记/React/6react第六天(redux).md>)
-  - [7 react 第七天(redux 的完善及 redux 部分高级)](<个人笔记/React/7react第七天(redux的完善及redux部分高级).md>)
-
+  - [5 React 第五天--Router](<个人笔记/React/5React第5天(Router).md>)
+  - [6 react 第六天--redux](<个人笔记/React/6react第六天(redux).md>)
+  - [7 react 第七天--redux 的完善及 redux 部分高级](<个人笔记/React/7react第七天(redux的完善及redux部分高级).md>)
   - [8 react 第八天](个人笔记/React/8react第八天.md)
   - [9 react 第九天](个人笔记/React/9react第九天.md)
   - [10 react 项目第一天](个人笔记/React/10react项目第一天.md)
